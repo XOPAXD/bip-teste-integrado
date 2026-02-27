@@ -1,0 +1,114 @@
+<div class="sicoob-container">
+  <header class="component-header">
+    <div class="header-content">
+      <h2 class="title">Gestão de Benefícios</h2>
+      <p class="subtitle">Acompanhamento de saldos e transferências internas</p>
+    </div>
+    <div class="status-badge">
+      <span class="dot"></span> Sistema
+    </div>
+  </header>
+
+  <div class="dashboard-grid">
+    <section class="list-section">
+      <div class="sicoob-card shadow-sm">
+        <div class="card-header">
+          <h5>Meus Saldos</h5>
+          <button (click)="carregar()" class="btn-refresh" title="Atualizar">
+            <i class="icon-sync"></i> ↻
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="sicoob-table">
+            <thead>
+            <tr>
+              <th>Benefício</th>
+              <th class="text-end">Saldo Disponível</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let b of beneficios" class="table-row">
+              <td>
+                <span class="beneficio-name">{{ b?.nome }}</span>
+                <small class="beneficio-id">ID: {{ b?.id }}</small>
+              </td>
+              <td class="text-end valor-destaque">
+                {{ b?.valor | currency:'BRL' }}
+              </td>
+            </tr>
+
+            <tr *ngIf="!beneficios || beneficios.length === 0">
+              <td colspan="2" class="text-center py-4">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Buscando saldos no Sicoob...</span>
+                </div>
+                <p class="mt-2">Sincronizando com a conta...</p>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <aside class="action-section">
+      <div class="sicoob-card transfer-card shadow-sm">
+        <div class="card-header border-lime">
+          <h5>Transferência Entre Contas</h5>
+        </div>
+
+        <div class="card-body">
+          <div class="form-group mb-3">
+            <label>Conta de Origem (ID)</label>
+            <input type="number" [(ngModel)]="fromId" class="sicoob-input" placeholder="000">
+          </div>
+
+          <div class="transfer-icon text-center">
+            <span class="arrow-down">↓</span>
+          </div>
+
+          <div class="form-group mb-3">
+            <label>Conta de Destino (ID)</label>
+            <input type="number" [(ngModel)]="toId" class="sicoob-input" placeholder="000">
+          </div>
+
+          <div class="form-group mb-4">
+            <label>Valor da Transação</label>
+            <div class="input-currency">
+              <span class="prefix">R$</span>
+              <input type="number" [(ngModel)]="valorTransferencia" class="sicoob-input ps-5" placeholder="0,00">
+            </div>
+          </div>
+
+          <button (click)="executarTransferencia()" class="btn-sicoob-primary w-100">
+            Confirmar Transferência
+          </button>
+
+          <p class="security-note">
+            Transação processada via módulo EJB com segurança bancária.
+          </p>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+
+<div class="sicoob-modal-overlay" *ngIf="showErrorModal">
+  <div class="sicoob-modal-card">
+    <div class="modal-header-error">
+      <span class="icon">⚠️</span>
+      <h4>Atenção</h4>
+    </div>
+    <div class="modal-body">
+      <p>Não foi possível completar a transação:</p>
+      <div class="error-box">
+        {{ errorMessage }}
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sicoob-primary" (click)="closeModal()">Entendido</button>
+    </div>
+  </div>
+</div>
