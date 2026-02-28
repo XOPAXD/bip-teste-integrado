@@ -1,0 +1,56 @@
+<div class="sicoob-card shadow-sm mt-4">
+  <div class="card-header border-lime">
+    <h5>Novo Cadastro de Benefício</h5>
+  </div>
+
+  <form class="card-body" #beneficioForm="ngForm">
+    <div class="form-group mb-3">
+      <label>Nome do Benefício</label>
+      <input type="text" name="nome" required
+             [(ngModel)]="novoBeneficio.nome"
+             #nomeRef="ngModel"
+             class="sicoob-input"
+             [class.input-error]="nomeRef.invalid && nomeRef.touched"
+             placeholder="Ex: Auxílio Saúde">
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Descrição detalhada</label>
+      <input type="text" name="descricao" required
+             [(ngModel)]="novoBeneficio.descricao"
+             #descRef="ngModel"
+             class="sicoob-input"
+             [class.input-error]="descRef.invalid && descRef.touched"
+             placeholder="Breve descrição do benefício">
+    </div>
+
+    <div class="form-group mb-4">
+      <label>Valor de Aporte</label>
+      <div class="input-currency">
+        <span class="prefix">R$</span>
+        <input type="text"
+               name="valor"
+               [required]="true"
+               mask="separator.2"
+               thousandSeparator="."
+               decimalMarker=","
+               [(ngModel)]="novoBeneficio.valor"
+               #valorRef="ngModel"
+               class="sicoob-input ps-5"
+               [class.input-error]="valorRef.invalid && valorRef.touched"
+               placeholder="0,00">
+      </div>
+    </div>
+
+    <button type="button"
+            (click)="salvar()"
+            [disabled]="beneficioForm.invalid || novoBeneficio.valor <= 0"
+            class="btn-sicoob-primary">
+      Cadastrar Benefício
+    </button>
+
+    <p *ngIf="beneficioForm.invalid && beneficioForm.touched" class="error-text">
+      Preencha todos os campos obrigatórios.
+    </p>
+  </form>
+</div>

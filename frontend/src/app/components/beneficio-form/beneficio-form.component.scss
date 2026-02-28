@@ -1,0 +1,119 @@
+$sicoob-green-dark: #003641;
+$sicoob-green-light: #00ae9d;
+$sicoob-lime: #c1d82f;
+$text-muted: #6c757d;
+
+.mt-4 { margin-top: 1.5rem; }
+
+.sicoob-card {
+  background: white;
+  border-radius: 16px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 54, 65, 0.05);
+  border: none;
+
+  .card-header {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+
+    h5 {
+      margin: 0;
+      color: $sicoob-green-dark;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    &.border-lime {
+      border-top: 5px solid $sicoob-lime;
+    }
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+.form-group {
+  label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $sicoob-green-dark;
+    margin-bottom: 8px;
+  }
+}
+
+.sicoob-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  background: #fdfdfd;
+  font-size: 1rem;
+  transition: all 0.3s;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: $sicoob-green-light;
+    box-shadow: 0 0 0 4px rgba($sicoob-green-light, 0.1);
+  }
+
+  &.input-error {
+    border-color: #dc3545 !important;
+    background-color: #fff8f8 !important;
+  }
+}
+
+.input-currency {
+  position: relative;
+  .prefix {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $text-muted;
+    font-weight: 600;
+    z-index: 1;
+  }
+  .ps-5 {
+    padding-left: 45px !important;
+  }
+}
+
+
+.btn-sicoob-primary {
+  width: 100%;
+  background: #00ae9d;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 10px 0;
+
+  &:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    background: #003641;
+    transform: translateY(-2px);
+  }
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 0.75rem;
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 600;
+}

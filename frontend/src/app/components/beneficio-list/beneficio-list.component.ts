@@ -4,13 +4,14 @@ import { Beneficio } from '../../models/beneficio.model';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {NgxMaskDirective} from 'ngx-mask';
+import {BeneficioFormComponent} from '../beneficio-form/beneficio-form.component';
 
 @Component({
   standalone: true,
   selector: 'app-beneficio-list',
   templateUrl: './beneficio-list.component.html',
   styleUrls: ['./beneficio-list.component.scss'],
-  imports: [CommonModule, FormsModule, NgxMaskDirective]
+  imports: [CommonModule, FormsModule, NgxMaskDirective, BeneficioFormComponent]
 })
 export class BeneficioListComponent implements OnInit {
   showErrorModal = false;
@@ -71,6 +72,23 @@ export class BeneficioListComponent implements OnInit {
         }, 10);
       }
     });
+  }
+
+  tratarSucessoCadastro() {
+    this.showSuccessModal = true;
+    this.carregar();
+    this.cdr.detectChanges();
+  }
+
+  tratarErroCadastro(mensagem: string) {
+    this.showErrorModal = false;
+    this.errorMessage = '';
+
+    setTimeout(() => {
+      this.showErrorModal = true;
+      this.errorMessage = mensagem;
+      this.cdr.detectChanges();
+    }, 10);
   }
 
   closeModal() {

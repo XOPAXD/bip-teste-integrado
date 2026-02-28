@@ -50,6 +50,11 @@
           </table>
         </div>
       </div>
+
+      <app-beneficio-form
+        (salvoComSucesso)="tratarSucessoCadastro()"
+        (erroAoSalvar)="tratarErroCadastro($event)">
+      </app-beneficio-form>
     </section>
 
     <aside class="action-section">
