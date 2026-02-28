@@ -63,6 +63,12 @@ mvn clean install
 cd frontend
 npm install
 ng serve
+```
+caso o Angular CLI não esteja instalado globalmente no seu sistema execute 
+```bash
+
+
+npx ng serve
 
 ```
 
