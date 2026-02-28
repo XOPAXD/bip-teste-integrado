@@ -1,43 +1,93 @@
-# 🏗️ Desafio Fullstack Integrado
-🚨 Instrução Importante (LEIA ANTES DE COMEÇAR)
-❌ NÃO faça fork deste repositório.
+# 🏦 Gestão de Benefícios (Módulo Integrado)
 
-Este repositório é fornecido como modelo/base. Para realizar o desafio, você deve:
-✅ Opção correta (obrigatória)
-  Clique em “Use this template” (se este repositório estiver marcado como Template)
-OU
-  Clone este repositório e crie um NOVO repositório público em sua conta GitHub.
-📌 O resultado deve ser um repositório próprio, independente deste.
+Este projeto é uma aplicação desenvolvida para o gerenciamento de benefícios e transferências financeiras entre contas. A arquitetura utiliza uma abordagem híbrida moderna, integrando a agilidade do **Spring Boot** com a robustez transacional dos **EJBs (Enterprise Java Beans)**, empacotados em um arquivo **EAR**.
 
-## 🎯 Objetivo
-Criar solução completa em camadas (DB, EJB, Backend, Frontend), corrigindo bug em EJB e entregando aplicação funcional.
+---
 
-## 📦 Estrutura
-- db/: scripts schema e seed
-- ejb-module/: serviço EJB com bug a ser corrigido
-- backend-module/: backend Spring Boot
-- frontend/: app Angular
-- docs/: instruções e critérios
-- .github/workflows/: CI
+## 🏗️ Arquitetura Técnica
 
-## ✅ Tarefas do candidato
-1. Executar db/schema.sql e db/seed.sql
-2. Corrigir bug no BeneficioEjbService
-3. Implementar backend CRUD + integração com EJB
-4. Desenvolver frontend Angular consumindo backend
-5. Implementar testes
-6. Documentar (Swagger, README)
-7. Submeter via fork + PR
+A solução é dividida em três camadas principais:
 
-## 🐞 Bug no EJB
-- Transferência não verifica saldo, não usa locking, pode gerar inconsistência
-- Espera-se correção com validações, rollback, locking/optimistic locking
+### 1. Frontend (Angular 17+)
+* **Standalone Components**: Arquitetura moderna sem a necessidade de NgModules complexos.
+* **SCSS Avançado**: Estilização focada na identidade visual.
+* **UX/UI**: Máscaras de moeda real (BRL) via `ngx-mask`, validações de formulário em tempo real e modais de feedback dinâmicos.
 
-## 📊 Critérios de avaliação
-- Arquitetura em camadas (20%)
-- Correção EJB (20%)
-- CRUD + Transferência (15%)
-- Qualidade de código (10%)
-- Testes (15%)
-- Documentação (10%)
-- Frontend (10%)
+### 2. Backend API (Spring Boot 3.2.x)
+* **Arquitetura de Coexistência**: Atua como um "Bridge" (ponte) expondo serviços REST enquanto consome lógica de negócio de módulos EJB corporativos.
+* **Injeção de Dependência**: Integração via `@ComponentScan` para reconhecer serviços no módulo EJB.
+
+### 3. Core Business (EJB 3.x / Jakarta EE)
+* **Stateless Session Beans**: Processamento de alta performance e gerenciamento de estado.
+* **Transacionalidade JTA**: Garantia de atomicidade (ACID) em operações financeiras.
+* **Persistence Layer**: JPA/Hibernate integrado ao PostgreSQL.
+
+---
+
+## 🛠️ Tecnologias e Versões
+
+| Tecnologia | Versão |
+| :--- | :--- |
+| **Java** | 21 |
+| **Angular** | 17.x |
+| **Spring Boot** | 3.2.5 |
+| **Jakarta EE / EJB** | 10 |
+| **PostgreSQL** | 15+ |
+| **Maven** | 3.9+ |
+
+---
+
+## 🚀 Como Executar o Projeto
+
+### 1. Clonar o Repositório
+```bash
+git clone [https://github.com/XOPAXD/bip-teste-integrado.git](https://github.com/XOPAXD/bip-teste-integrado.git)
+cd bip-teste-integrado
+
+```
+
+### 2. Backend & EJB (Multi-module)
+
+Certifique-se de que o banco de dados PostgreSQL está configurado no `application.properties` e rode o comando na raiz do projeto.
+
+```bash
+mvn clean install
+
+```
+
+*O artefato `.ear` será gerado em `ear-module/target/` para deploy no WildFly/JBoss.*
+
+### 3. Frontend (Angular)
+
+```bash
+cd frontend
+npm install
+ng serve
+
+```
+
+Acesse: [http://localhost:4200](https://www.google.com/search?q=http://localhost:4200)
+
+---
+
+## 🔒 Regras de Negócio e Segurança
+
+* ✅ **Validação de Saldo**: O sistema impede transferências maiores que o saldo disponível com rollback automático.
+* ✅ **Máscara Monetária**: Inputs formatados para o padrão brasileiro `R$ 1.234,56`.
+* ✅ **Integridade Transacional**: Uso de `@TransactionAttribute` para garantir consistência de dados.
+* ✅ **UI Reativa**: Botão de confirmação inteligente que valida campos vazios e valores negativos.
+
+---
+
+## 📂 Estrutura de Pastas
+
+```text
+├── backend-module/   # API REST com Spring Boot (WAR)
+├── ejb-module/       # Camada de Persistência e EJBs (JAR)
+├── ear-module/       # Pacote de distribuição para Servidor (EAR)
+├── frontend/         # Aplicação Angular 17
+└── pom.xml           # Parent Maven Configuration
+
+```
+
+---
