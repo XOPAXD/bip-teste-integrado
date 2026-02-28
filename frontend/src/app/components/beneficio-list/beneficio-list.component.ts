@@ -3,16 +3,18 @@ import { BeneficioService } from '../../services/beneficio.service';
 import { Beneficio } from '../../models/beneficio.model';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import {NgxMaskDirective} from 'ngx-mask';
 
 @Component({
   standalone: true,
   selector: 'app-beneficio-list',
   templateUrl: './beneficio-list.component.html',
   styleUrls: ['./beneficio-list.component.scss'],
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, NgxMaskDirective]
 })
 export class BeneficioListComponent implements OnInit {
   showErrorModal = false;
+  showSuccessModal = false;
   errorMessage = '';
 
   beneficios: Beneficio[] = [];
@@ -42,19 +44,38 @@ export class BeneficioListComponent implements OnInit {
   }
 
   executarTransferencia() {
-    this.service.transferir(this.fromId, this.toId, this.valorTransferencia).subscribe({
+    if (!this.fromId || !this.toId || !this.valorTransferencia || this.valorTransferencia <= 0) {
+      this.showErrorModal = true;
+      this.errorMessage = 'Por favor, preencha todos os campos de transferência com valores válidos.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    const valorNumerico = Number(this.valorTransferencia);
+
+    this.service.transferir(this.fromId, this.toId, valorNumerico).subscribe({
       next: () => {
-        alert('Transferência realizada com sucesso!');
+        this.showSuccessModal = true;
+        this.cdr.detectChanges();
         this.carregar();
+
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || err.error || 'Erro inesperado na transação.';
-        this.showErrorModal = true;
+        this.showErrorModal = false;
+        this.errorMessage = '';
+
+        setTimeout(() => {
+          this.showErrorModal = true;
+          this.errorMessage = err.error?.message || err.error || 'Erro inesperado na transação.';
+          this.cdr.detectChanges();
+        }, 10);
       }
     });
   }
 
   closeModal() {
     this.showErrorModal = false;
+    this.showSuccessModal = false;
   }
+
 }

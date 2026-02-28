@@ -58,10 +58,15 @@
           <h5>Transferência Entre Contas</h5>
         </div>
 
-        <div class="card-body">
+        <form class="card-body" #transferForm="ngForm">
+
           <div class="form-group mb-3">
             <label>Conta de Origem (ID)</label>
-            <input type="number" [(ngModel)]="fromId" class="sicoob-input" placeholder="000">
+            <input type="number" name="fromIdInput" required [(ngModel)]="fromId"
+                   #fromRef="ngModel"
+                   class="sicoob-input"
+                   [class.input-error]="fromRef.invalid && fromRef.touched"
+                   placeholder="000">
           </div>
 
           <div class="transfer-icon text-center">
@@ -70,25 +75,38 @@
 
           <div class="form-group mb-3">
             <label>Conta de Destino (ID)</label>
-            <input type="number" [(ngModel)]="toId" class="sicoob-input" placeholder="000">
+            <input type="number" name="toIdInput" required [(ngModel)]="toId"
+                   #toRef="ngModel"
+                   class="sicoob-input"
+                   [class.input-error]="toRef.invalid && toRef.touched"
+                   placeholder="000">
           </div>
 
           <div class="form-group mb-4">
             <label>Valor da Transação</label>
             <div class="input-currency">
               <span class="prefix">R$</span>
-              <input type="number" [(ngModel)]="valorTransferencia" class="sicoob-input ps-5" placeholder="0,00">
+              <input type="text" name="valorInput" [required]="true"
+                     mask="separator.2" thousandSeparator="." decimalMarker=","
+                     [(ngModel)]="valorTransferencia"
+                     #valorRef="ngModel"
+                     class="sicoob-input ps-5"
+                     [class.input-error]="valorRef.invalid && valorRef.touched"
+                     placeholder="0,00">
             </div>
           </div>
 
-          <button (click)="executarTransferencia()" class="btn-sicoob-primary w-100">
+          <button type="button"
+                  (click)="executarTransferencia()"
+                  [disabled]="transferForm.invalid || !valorTransferencia || valorTransferencia <= 0"
+                  class="btn-sicoob-primary">
             Confirmar Transferência
           </button>
 
-          <p class="security-note">
-            Transação processada via módulo EJB com segurança bancária.
+          <p *ngIf="transferForm.invalid && transferForm.touched" class="error-text">
+            Preencha todos os campos obrigatórios.
           </p>
-        </div>
+        </form>
       </div>
     </aside>
   </div>
@@ -109,6 +127,26 @@
     </div>
     <div class="modal-footer">
       <button class="btn-sicoob-primary" (click)="closeModal()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<div class="sicoob-modal-overlay" *ngIf="showSuccessModal">
+  <div class="sicoob-modal-card">
+    <div class="modal-header-success">
+      <div class="success-icon-circle">
+        <span class="icon">✓</span>
+      </div>
+      <h4>Sucesso!</h4>
+    </div>
+    <div class="modal-body text-center">
+      <p>A transferência foi processada e confirmada pelo sistema.</p>
+      <div class="success-details">
+        Comprovante gerado com sucesso.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sicoob-primary w-100" (click)="closeModal()">Concluir</button>
     </div>
   </div>
 </div>
