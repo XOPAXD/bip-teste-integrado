@@ -1,8 +1,10 @@
+@use "sass:color";
 $sicoob-green-dark: #003641;
 $sicoob-green-light: #00ae9d;
 $sicoob-lime: #c1d82f;
 $sicoob-bg: #f4f7f6;
 $text-muted: #6c757d;
+$sicoob-danger: #d32f2f;
 
 :host {
   display: block;
@@ -376,3 +378,46 @@ $text-muted: #6c757d;
   transform: none;
   box-shadow: none;
 }
+
+.btn-action {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-left: 8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+
+  &.edit { color: $sicoob-green-light; &:hover { background: rgba($sicoob-green-light, 0.1); } }
+  &.delete { color: $sicoob-danger; &:hover { background: rgba($sicoob-danger, 0.1); } }
+}
+
+.d-flex { display: flex; }
+.justify-content-center { justify-content: center; }
+.gap-3 { gap: 1rem; }
+.mt-3 { margin-top: 1rem; }
+
+.btn-sicoob-secondary {
+  background: #eee;
+  color: #555;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-sicoob-danger {
+  background: $sicoob-danger;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 12px 30px;
+  &:hover {  background: color.adjust($sicoob-danger, $lightness: -10%); }
+}
+
+.d-flex { display: flex; }
+.gap-2 { gap: 0.5rem; }

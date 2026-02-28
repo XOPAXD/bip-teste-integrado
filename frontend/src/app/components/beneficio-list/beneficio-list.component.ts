@@ -17,12 +17,20 @@ export class BeneficioListComponent implements OnInit {
   showErrorModal = false;
   showSuccessModal = false;
   errorMessage = '';
+  successTitle: string = 'Sucesso!';
+  successMessage: string = '';
+  successDetail: string = '';
 
   beneficios: Beneficio[] = [];
 
   fromId!: number;
   toId!: number;
   valorTransferencia: number = 0;
+  beneficioSelecionado: Beneficio | null = null;
+
+  showDeleteModal: boolean = false;
+  idParaExcluir: number | null = null;
+  nomeParaExcluir: string = '';
 
   constructor(private service: BeneficioService, private cdr: ChangeDetectorRef) {}
 
@@ -56,9 +64,13 @@ export class BeneficioListComponent implements OnInit {
 
     this.service.transferir(this.fromId, this.toId, valorNumerico).subscribe({
       next: () => {
-        this.showSuccessModal = true;
         this.cdr.detectChanges();
+        this.successTitle = 'Sucesso!';
+        this.successMessage = 'A transferência foi processada e confirmada pelo sistema.';
+        this.successDetail = 'Comprovante gerado com sucesso.';
+        this.showSuccessModal = true;
         this.carregar();
+
 
       },
       error: (err) => {
@@ -74,9 +86,23 @@ export class BeneficioListComponent implements OnInit {
     });
   }
 
+  prepararEdicao(b: Beneficio) {
+    this.beneficioSelecionado = b;
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }
+
   tratarSucessoCadastro() {
+    const isEdicao = !!this.beneficioSelecionado?.id;
+
+    this.successTitle = isEdicao ? 'Alteração Realizada!' : 'Cadastro Concluído!';
+    this.successMessage = isEdicao
+      ? 'Os dados do benefício foram atualizados com sucesso.'
+      : 'O novo benefício foi registrado na base de dados.';
+    this.successDetail = 'As alterações já foram refletidas.';
+
     this.showSuccessModal = true;
     this.carregar();
+    this.limparSelecao();
     this.cdr.detectChanges();
   }
 
@@ -91,9 +117,50 @@ export class BeneficioListComponent implements OnInit {
     }, 10);
   }
 
+  confirmarExclusao(beneficio: any) {
+    this.idParaExcluir = beneficio.id;
+    this.nomeParaExcluir = beneficio.nome;
+    this.showDeleteModal = true;
+    this.cdr.detectChanges();
+  }
+
+  cancelarExclusao() {
+    this.showDeleteModal = false;
+    this.idParaExcluir = null;
+  }
+
+  executarExclusao() {
+    if (this.idParaExcluir) {
+      this.service.excluir(this.idParaExcluir).subscribe({
+        next: () => {
+          this.showDeleteModal = false;
+
+          this.successTitle = 'Excluído com Sucesso';
+          this.successMessage = `O benefício "${this.nomeParaExcluir}" foi removido do sistema.`;
+          this.successDetail = 'A lista de saldos foi atualizada.';
+          this.showSuccessModal = true;
+
+          this.carregar();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.cdr.detectChanges();
+          this.showDeleteModal = false;
+          this.errorMessage = err.error?.message || 'Erro ao tentar excluir o benefício.';
+          this.showErrorModal = true;
+
+        }
+      });
+    }
+  }
+
   closeModal() {
     this.showErrorModal = false;
     this.showSuccessModal = false;
+  }
+
+  limparSelecao() {
+    this.beneficioSelecionado = null;
   }
 
 }

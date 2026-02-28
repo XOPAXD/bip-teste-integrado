@@ -117,3 +117,23 @@ $text-muted: #6c757d;
   margin-top: 10px;
   font-weight: 600;
 }
+
+.btn-close-edit {
+  background: #f0f0f0;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  color: $sicoob-green-dark;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #e0e0e0;
+    color: #dc3545;
+  }
+}
+
+.d-flex { display: flex; gap: 10px; }

@@ -23,4 +23,8 @@ export class BeneficioService {
       params: { from: from.toString(), to: to.toString(), valor: valor.toString() }
     });
   }
+
+  excluir(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.API}/${id}`);
+  }
 }

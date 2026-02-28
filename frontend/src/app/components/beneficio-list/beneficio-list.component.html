@@ -35,6 +35,8 @@
               </td>
               <td class="text-end valor-destaque">
                 {{ b?.valor | currency:'BRL' }}
+                <button (click)="prepararEdicao(b)" class="btn-refresh ms-2">✎</button>
+                <button (click)="confirmarExclusao(b)" class="btn-action delete" title="Excluir">🗑</button>
               </td>
             </tr>
 
@@ -52,8 +54,10 @@
       </div>
 
       <app-beneficio-form
-        (salvoComSucesso)="tratarSucessoCadastro()"
-        (erroAoSalvar)="tratarErroCadastro($event)">
+        [beneficioParaEdicao]="beneficioSelecionado"
+        (salvoComSucesso)="tratarSucessoCadastro(); limparSelecao()"
+        (erroAoSalvar)="tratarErroCadastro($any($event))"
+        (cancelarEdicao)="limparSelecao()">
       </app-beneficio-form>
     </section>
 
@@ -142,16 +146,43 @@
       <div class="success-icon-circle">
         <span class="icon">✓</span>
       </div>
-      <h4>Sucesso!</h4>
+      <h4>{{ successTitle }}</h4>
     </div>
     <div class="modal-body text-center">
-      <p>A transferência foi processada e confirmada pelo sistema.</p>
+      <p>{{ successMessage }}</p>
       <div class="success-details">
-        Comprovante gerado com sucesso.
+        {{ successDetail }}
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn-sicoob-primary w-100" (click)="closeModal()">Concluir</button>
+    </div>
+  </div>
+</div>
+
+<div class="sicoob-modal-overlay" *ngIf="showDeleteModal">
+  <div class="sicoob-modal-card">
+    <div class="modal-header-error">
+      <span class="icon">🗑️</span>
+      <h4>Confirmar Exclusão</h4>
+    </div>
+    <div class="modal-body text-center">
+      <p>Tem certeza que deseja remover o benefício:</p>
+      <div class="error-box text-center">
+        <strong>{{ nomeParaExcluir }}</strong>
+      </div>
+      <p class="mt-3 text-muted" style="font-size: 0.85rem;">
+        Esta ação não poderá ser desfeita no sistema.
+      </p>
+    </div>
+
+    <div class="modal-footer d-flex gap-3 p-3 justify-content-center">
+      <button class="btn-sicoob-secondary" (click)="cancelarExclusao()">
+        Cancelar
+      </button>
+      <button class="btn-sicoob-danger" (click)="executarExclusao()">
+        Confirmar Exclusão
+      </button>
     </div>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
 import { BeneficioService } from '../../services/beneficio.service';
 import { Beneficio } from '../../models/beneficio.model';
 import {CommonModule} from '@angular/common';
@@ -21,10 +21,18 @@ export class BeneficioFormComponent {
     ativo: true
   };
 
+  @Input() beneficioParaEdicao: Beneficio | null = null;
   @Output() salvoComSucesso = new EventEmitter<void>();
   @Output() erroAoSalvar = new EventEmitter<string>();
+  @Output() cancelarEdicao = new EventEmitter<void>();
 
   constructor(private beneficioService: BeneficioService) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['beneficioParaEdicao'] && this.beneficioParaEdicao) {
+      this.novoBeneficio = { ...this.beneficioParaEdicao };
+    }
+  }
 
   salvar() {
     if (!this.novoBeneficio.nome || !this.novoBeneficio.descricao || this.novoBeneficio.valor <= 0) {
@@ -32,19 +40,27 @@ export class BeneficioFormComponent {
       return;
     }
 
-    this.beneficioService.salvar(this.novoBeneficio).subscribe({
+    const dadosParaEnviar = { ...this.novoBeneficio, valor: Number(this.novoBeneficio.valor) };
+
+    this.beneficioService.salvar(dadosParaEnviar).subscribe({
       next: () => {
         this.limparForm();
         this.salvoComSucesso.emit();
       },
       error: (err) => {
-        const msg = err.error?.message || err.error || 'Erro ao cadastrar benefício.';
+        const msg = err.error?.message || err.error || 'Erro ao processar benefício.';
         this.erroAoSalvar.emit(msg);
       }
     });
   }
 
-  private limparForm() {
-    this.novoBeneficio = { nome: '', descricao: '', valor: 0, ativo: true };
+  limparForm() {
+    this.novoBeneficio = this.inicializarNovoBeneficio();
+    this.beneficioParaEdicao = null;
+    this.cancelarEdicao.emit();
+  }
+
+  private inicializarNovoBeneficio(): Beneficio {
+    return { nome: '', descricao: '', valor: 0, ativo: true };
   }
 }
