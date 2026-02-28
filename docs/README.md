@@ -41,7 +41,7 @@ A solução é dividida em três camadas principais:
 
 ### 1. Clonar o Repositório
 ```bash
-git clone [https://github.com/XOPAXD/bip-teste-integrado.git](https://github.com/XOPAXD/bip-teste-integrado.git)
+git clone [https://github.com/XOPAXD/bip-teste-integrado.git]
 cd bip-teste-integrado
 
 ```
